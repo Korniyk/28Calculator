@@ -21,35 +21,6 @@ class CalculatorModel:
     def evaluate_expression(self):
         """
         Обчислює вираз, що міститься в self.expression.
-
-        >>> calc = CalculatorModel()
-        >>> calc.expression = "2+3"
-        >>> calc.evaluate_expression()
-        5
-
-        >>> calc.expression = "10-4"
-        >>> calc.evaluate_expression()
-        6
-
-        >>> calc.expression = "6*3"
-        >>> calc.evaluate_expression()
-        18
-
-        >>> calc.expression = "8/2"
-        >>> calc.evaluate_expression()
-        4.0
-
-        >>> calc.expression = "10//3"
-        >>> calc.evaluate_expression()
-        3
-
-        >>> calc.expression = "10%3"
-        >>> calc.evaluate_expression()
-        1
-
-        >>> calc.expression = "10/0"  # Ділення на нуль
-        >>> calc.evaluate_expression()
-        'Помилка'
         """
         try:
             result = eval(self.expression, {"__builtins__": {}}, self.operators)
@@ -155,3 +126,47 @@ if __name__ == "__main__":
     app = CalculatorApp(root)
     root.mainloop()
     doctest.testmod()
+
+
+# pytest тести
+import pytest
+
+
+@pytest.fixture
+def calc():
+    return CalculatorModel()
+
+
+def test_addition(calc):
+    calc.expression = "2+3"
+    assert calc.evaluate_expression() == 5
+
+
+def test_subtraction(calc):
+    calc.expression = "10-4"
+    assert calc.evaluate_expression() == 6
+
+
+def test_multiplication(calc):
+    calc.expression = "6*3"
+    assert calc.evaluate_expression() == 18
+
+
+def test_division(calc):
+    calc.expression = "8/2"
+    assert calc.evaluate_expression() == 4.0
+
+
+def test_floor_division(calc):
+    calc.expression = "10//3"
+    assert calc.evaluate_expression() == 3
+
+
+def test_modulo(calc):
+    calc.expression = "10%3"
+    assert calc.evaluate_expression() == 1
+
+
+def test_division_by_zero(calc):
+    calc.expression = "10/0"
+    assert calc.evaluate_expression() == "Помилка"
